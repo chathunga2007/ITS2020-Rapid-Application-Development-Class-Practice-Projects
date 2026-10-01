@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import { UserModel, UserRole } from "../models/user.model"
 import bcrypt from "bcryptjs"
+import { signAccessToken, signRefershToken } from "../util/jwt_token"
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -66,10 +67,18 @@ export const login = async (req: Request, res: Response) => {
       })
     }
 
+    const accesToken = signAccessToken(user)
+    const refreshToken = signRefershToken(user)
+
     // Successful authentication
     return res.status(200).json({
       message: "Login successful..!",
-      user: user
+      data: {
+        email: user.email,
+        roles: user.roles,
+        access_token: accesToken,
+        refresh_token: refreshToken
+      }
     })
 
   } catch (err) {
