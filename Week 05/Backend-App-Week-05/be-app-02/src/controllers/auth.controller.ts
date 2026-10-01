@@ -68,3 +68,60 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     });
   }
 };
+
+export const login = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { email, password } = req.body;
+
+    // Check required fields
+    if (!email || !password) {
+      res.status(400).json({
+        message: "Email and password are required!",
+        data: null,
+      });
+      return;
+    }
+
+    // Check if user exists
+    const user = await authModel.findOne({ email });
+    if (!user) {
+      res.status(404).json({
+        message: "User not found with this email!",
+        data: null,
+      });
+      return;
+    }
+
+    // Verify password
+    const isPasswordMatch = bcrypt.compareSync(password, user.password);
+    if (!isPasswordMatch) {
+      res.status(401).json({
+        message: "Invalid credentials! Incorrect password.",
+        data: null,
+      });
+      return;
+    }
+
+    // Return user details without password
+    const userData = {
+      _id: user._id,
+      username: user.username,
+      name: user.name,
+      email: user.email,
+      roles: user.roles,
+      approve: user.approve,
+    };
+
+    res.status(200).json({
+      message: "Login successful!",
+      data: userData,
+    });
+  } catch (err: any) {
+    console.error(err);
+    res.status(500).json({
+      message: "Login failed!",
+      data: null,
+    });
+  }
+};
+

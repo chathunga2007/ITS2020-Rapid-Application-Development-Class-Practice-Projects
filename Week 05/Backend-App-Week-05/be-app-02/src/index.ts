@@ -32,10 +32,6 @@ app.get('/', /*testMidl,*/(req: Request, res: Response) => {
 app.use("/api/v1/item", itemRoute)
 app.use("/api/v1/auth", authRoute)
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
-
 mongoos
   .connect("mongodb://localhost:27017/node_backend_test_pro_01")
   .then((res) => {
@@ -48,3 +44,7 @@ mongoos
   .catch((err) => {
     console.error("DB Fail: ", err)
   })
+
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});

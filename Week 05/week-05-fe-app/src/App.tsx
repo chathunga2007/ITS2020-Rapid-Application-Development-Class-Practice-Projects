@@ -1,33 +1,50 @@
-import axios from "axios"
-import { useEffect, useState } from "react"
+import { useState } from "react";
+import type { User } from "./types";
+import { Navbar } from "./components/Navbar";
+import { AuthCard } from "./components/AuthCard";
+import { Dashboard } from "./components/Dashboard";
+import "./App.css";
 
 function App() {
-  const [item, setItems] = useState([])
-
-  const fetchData = async () => {
+  const [user, setUser] = useState<User | null>(() => {
     try {
-      const res = await axios.get("http://localhost:3000/api/v1/item/all")
-      const data = res.data
-
-      setItems(data.data)
-    } catch (err) {
-      console.error(err)
+      const saved = localStorage.getItem("rad_auth_user");
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
     }
-  }
+  });
 
-  useEffect(() => {
-    // const res = axios.get("http://localhost:3000/api/v1/item/all")
-    fetchData()
-  }, [])
+  const handleLoginSuccess = (userData: User) => {
+    setUser(userData);
+    try {
+      localStorage.setItem("rad_auth_user", JSON.stringify(userData));
+    } catch (e) {
+      console.error("Failed to persist user in localStorage:", e);
+    }
+  };
 
-  return <div>
-    {item.map((item: any, index) => (
-      <div key={index}>
-        <h1>{item.name}</h1>
-        <h1>{item.price}</h1>
-      </div>
-    ))}
-  </div>
+  const handleLogout = () => {
+    setUser(null);
+    try {
+      localStorage.removeItem("rad_auth_user");
+    } catch (e) {
+      console.error("Failed to remove user from localStorage:", e);
+    }
+  };
+
+  return (
+    <div className="app-container">
+      <Navbar user={user} onLogout={handleLogout} />
+      <main className="main-content">
+        {user ? (
+          <Dashboard user={user} onLogout={handleLogout} />
+        ) : (
+          <AuthCard onLoginSuccess={handleLoginSuccess} />
+        )}
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default App;
