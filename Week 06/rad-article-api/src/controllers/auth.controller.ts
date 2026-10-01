@@ -6,7 +6,7 @@ import { AuthRequest } from "../middleware/auth"
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { name, email, password } = req.body
+    const { name, email, password, roles } = req.body
     const extUser = await UserModel.findOne({ email })
     if (extUser) {
       return res.status(400).json({
@@ -20,7 +20,7 @@ export const register = async (req: Request, res: Response) => {
       name,
       email,
       password: hashedPassword,
-      roles: [UserRole.USER],
+      roles: roles && Array.isArray(roles) && roles.length > 0 ? roles : [UserRole.USER],
       approve: true
     })
     await newUser.save()
@@ -112,5 +112,14 @@ export const getMyDetails = async (req: AuthRequest, res: Response) => {
 
   return res.status(200).json({
     message: "OK", data: {id: _id, email, roles}
+  })
+}
+
+export const adminAccess = async (req: AuthRequest, res: Response) => {
+  return res.status(200).json({
+    message: "Admin access granted..!",
+    data: {
+      user: req.user
+    }
   })
 } 
