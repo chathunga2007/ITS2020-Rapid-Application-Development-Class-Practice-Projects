@@ -1,13 +1,15 @@
+import "dotenv/config"
 import express, { type Request, type Response } from "express"
 import AuthRouter from "./routes/auth.routers"
 import mongoose from "mongoose"
-import dotenv from "dotenv"
-dotenv.config()
+import cors from "cors"
 
 const PORT = process.env.PORT 
 const URL = process.env.MONGO_LOCAL_URL || ""
 
 const app = express()
+
+app.use(cors())
 
 app.use(express.json())
 
