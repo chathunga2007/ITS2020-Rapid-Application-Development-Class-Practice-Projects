@@ -34,3 +34,5 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
         })
     }
 }
+
+export * from "./role"
