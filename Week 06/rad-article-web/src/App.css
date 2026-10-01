@@ -1,0 +1,507 @@
+css * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+/* =========================
+   Register Page
+========================= */
+
+.register-page {
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 30px;
+
+    background: linear-gradient(135deg,
+            #667eea 0%,
+            #764ba2 100%);
+}
+
+/* =========================
+   Register Card
+========================= */
+
+.register-container {
+    width: 100%;
+    max-width: 430px;
+
+    padding: 45px 40px;
+
+    background: rgba(255, 255, 255, 0.96);
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.2);
+
+    backdrop-filter: blur(10px);
+}
+
+/* =========================
+   Heading
+========================= */
+
+.register-container h1 {
+    text-align: center;
+
+    margin-bottom: 32px;
+
+    font-size: 32px;
+    font-weight: 700;
+
+    color: #1f2937;
+}
+
+/* =========================
+   Form
+========================= */
+
+.register-container form {
+    display: flex;
+    flex-direction: column;
+
+    gap: 22px;
+}
+
+/* =========================
+   Inputs
+========================= */
+
+.register-container input {
+    width: 100%;
+
+    padding: 16px 18px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 10px;
+
+    background-color: #fff;
+
+    color: #1f2937;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition: all 0.3s ease;
+}
+
+.register-container input::placeholder {
+    color: #9ca3af;
+}
+
+.register-container input:hover {
+    border-color: #a5b4fc;
+}
+
+.register-container input:focus {
+    border-color: #667eea;
+
+    box-shadow:
+        0 0 0 4px rgba(102, 126, 234, 0.15);
+}
+
+/* =========================
+   Create Account Button
+========================= */
+
+.create-btn {
+    width: 100%;
+
+    padding: 16px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: linear-gradient(135deg,
+            #667eea,
+            #764ba2);
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+}
+
+.create-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 25px rgba(102, 126, 234, 0.35);
+}
+
+.create-btn:active {
+    transform: translateY(0);
+}
+
+/* =========================
+   Bottom Text
+========================= */
+
+.register-container p {
+    text-align: center;
+
+    margin-top: 28px;
+
+    color: #6b7280;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+/* =========================
+   Login Button
+========================= */
+
+.login-btn {
+    border: none;
+
+    background: none;
+
+    color: #667eea;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    margin-left: 6px;
+
+    transition: color 0.2s ease;
+}
+
+.login-btn:hover {
+    color: #764ba2;
+
+    text-decoration: underline;
+}
+
+/* =========================
+   Mobile Responsive
+========================= */
+
+@media (max-width: 480px) {
+    .register-page {
+        padding: 20px;
+    }
+
+    .register-container {
+        padding: 35px 25px;
+
+        border-radius: 18px;
+    }
+
+    .register-container h1 {
+        font-size: 28px;
+
+        margin-bottom: 28px;
+    }
+
+    .register-container form {
+        gap: 18px;
+    }
+
+    .register-container input {
+        padding: 14px 16px;
+    }
+
+    .create-btn {
+        padding: 14px;
+    }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+/* =========================
+   Auth Page
+========================= */
+
+.auth-page {
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 30px;
+
+  background: linear-gradient(
+    135deg,
+    #667eea 0%,
+    #764ba2 100%
+  );
+}
+
+/* =========================
+   Auth Card
+========================= */
+
+.auth-card {
+  width: 100%;
+  max-width: 430px;
+
+  padding: 45px 40px;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  border-radius: 22px;
+
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.2);
+
+  backdrop-filter: blur(10px);
+}
+
+/* =========================
+   Brand
+========================= */
+
+.brand {
+  text-align: center;
+
+  margin-bottom: 15px;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  color: #667eea;
+}
+
+/* =========================
+   Heading
+========================= */
+
+.auth-card h1 {
+  text-align: center;
+
+  font-size: 32px;
+  font-weight: 700;
+
+  color: #1f2937;
+
+  margin-bottom: 8px;
+}
+
+/* =========================
+   Subtitle
+========================= */
+
+.subtitle {
+  text-align: center;
+
+  color: #6b7280;
+
+  font-size: 14px;
+
+  margin-bottom: 32px;
+}
+
+/* =========================
+   Form
+========================= */
+
+.auth-card form {
+  display: flex;
+  flex-direction: column;
+
+  gap: 22px;
+}
+
+/* =========================
+   Form Group
+========================= */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+/* =========================
+   Labels
+========================= */
+
+.form-group label {
+  font-size: 14px;
+
+  font-weight: 600;
+
+  color: #374151;
+}
+
+/* =========================
+   Inputs
+========================= */
+
+.form-group input {
+  width: 100%;
+
+  padding: 16px 18px;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 10px;
+
+  background-color: #fff;
+
+  color: #1f2937;
+
+  font-size: 15px;
+
+  outline: none;
+
+  transition: all 0.3s ease;
+}
+
+.form-group input::placeholder {
+  color: #9ca3af;
+}
+
+.form-group input:hover {
+  border-color: #a5b4fc;
+}
+
+.form-group input:focus {
+  border-color: #667eea;
+
+  box-shadow:
+    0 0 0 4px rgba(102, 126, 234, 0.15);
+}
+
+/* =========================
+   Login Button
+========================= */
+
+.primary-btn {
+  width: 100%;
+
+  padding: 16px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: linear-gradient(
+    135deg,
+    #667eea,
+    #764ba2
+  );
+
+  color: white;
+
+  font-size: 16px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 25px rgba(102, 126, 234, 0.35);
+}
+
+.primary-btn:active {
+  transform: translateY(0);
+}
+
+/* =========================
+   Switch Text
+========================= */
+
+.switch-text {
+  text-align: center;
+
+  margin-top: 28px;
+
+  color: #6b7280;
+
+  font-size: 14px;
+
+  line-height: 1.6;
+}
+
+/* =========================
+   Register Link
+========================= */
+
+.switch-text a {
+  color: #667eea;
+
+  font-weight: 600;
+
+  text-decoration: none;
+
+  margin-left: 5px;
+
+  transition: color 0.2s ease;
+}
+
+.switch-text a:hover {
+  color: #764ba2;
+
+  text-decoration: underline;
+}
+
+/* =========================
+   Mobile Responsive
+========================= */
+
+@media (max-width: 480px) {
+  .auth-page {
+    padding: 20px;
+  }
+
+  .auth-card {
+    padding: 35px 25px;
+
+    border-radius: 18px;
+  }
+
+  .auth-card h1 {
+    font-size: 28px;
+  }
+
+  .auth-card form {
+    gap: 18px;
+  }
+
+  .form-group input {
+    padding: 14px 16px;
+  }
+
+  .primary-btn {
+    padding: 14px;
+  }
+}
