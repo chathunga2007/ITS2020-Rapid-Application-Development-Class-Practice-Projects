@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import { UserModel, UserRole } from "../models/user.model"
 import bcrypt from "bcryptjs"
 import { signAccessToken, signRefershToken } from "../util/jwt_token"
+import { AuthRequest } from "../middleware/auth"
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -89,3 +90,27 @@ export const login = async (req: Request, res: Response) => {
     })
   }
 }
+
+export const getMyDetails = async (req: AuthRequest, res: Response) => {
+  // req.user.sub -> userID
+  res.send("OK")
+  if(!req.user) {
+    return res.status(401).json({
+      message: "Unathorized"
+    })
+  }
+
+  const user = await UserModel.findById(req.user.sub).select("-password")
+
+  if(!user) {
+    return res.status(404).json({
+      message: "User not found"
+    })
+  }
+
+  const { email, roles, _id} = user
+
+  return res.status(200).json({
+    message: "OK", data: {id: _id, email, roles}
+  })
+} 
