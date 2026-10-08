@@ -27,10 +27,9 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
         const payload = await jwt.verify(token, JWT_SECRET)
         req.user = payload
         next()
-    } catch (err) {
-        console.error(err)
+    } catch (err: any) {
         return res.status(401).json({
-            message: "Invalid or expire token...!"
+            message: err.name === "TokenExpiredError" ? "Token expired, please login again...!" : "Invalid token...!"
         })
     }
 }
