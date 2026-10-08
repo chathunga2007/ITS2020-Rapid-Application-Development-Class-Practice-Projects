@@ -1,7 +1,6 @@
 // SOC
 
 import "dotenv/config"
-
 import { IUser } from "../models/user.model"
 import jwt from "jsonwebtoken"
 
