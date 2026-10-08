@@ -3,6 +3,8 @@ import { UserModel, UserRole } from "../models/user.model"
 import bcrypt from "bcryptjs"
 import { signAccessToken, signRefershToken } from "../util/jwt_token"
 import { AuthRequest } from "../middleware/auth"
+import "dotenv/config"
+import jwt from "jsonwebtoken"
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -93,7 +95,7 @@ export const login = async (req: Request, res: Response) => {
 
 export const getMyDetails = async (req: AuthRequest, res: Response) => {
   // req.user.sub -> userID
-  res.send("OK")
+  // res.send("OK")
   if(!req.user) {
     return res.status(401).json({
       message: "Unathorized"
@@ -123,3 +125,36 @@ export const adminAccess = async (req: AuthRequest, res: Response) => {
     }
   })
 } 
+
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET as string
+
+export const getRefreshToken = async (req: Request, res: Response) => {
+  const {refresh_token} = req.body
+  try {
+    if(!refresh_token) {
+      return res.status(400).json({
+        message: "Token required...!"
+      })
+    }
+    const payload = jwt.verify(refresh_token, JWT_REFRESH_SECRET)
+
+    const userId = payload?.sub
+    const user = await UserModel.findById(userId)
+
+    if(!user) {
+      return res.status(403).json({
+        message: "Invalid or expir token...!"
+      })
+    }
+
+    const newAccessToken = signAccessToken(user)
+
+    res.status(200).json({
+      message: "",
+      data: { accessToken: newAccessToken}
+    })
+  } catch (err) {
+    console.error(err)
+    res.status(403).json({message: "Invalid or expir token...!"})
+  }
+}
