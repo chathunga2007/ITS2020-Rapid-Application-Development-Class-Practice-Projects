@@ -38,7 +38,7 @@ export default function Login() {
                 console.warn("Could not fetch user details:", err)
             }
 
-            navigate("/home")
+            navigate("/")
 
         } catch (error) {
             console.error("Login error:", error)
