@@ -129,14 +129,14 @@ export const adminAccess = async (req: AuthRequest, res: Response) => {
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET as string
 
 export const getRefreshToken = async (req: Request, res: Response) => {
-  const {refresh_token} = req.body
+  const {refreshToken} = req.body
   try {
-    if(!refresh_token) {
+    if(!refreshToken) {
       return res.status(400).json({
         message: "Token required...!"
       })
     }
-    const payload = jwt.verify(refresh_token, JWT_REFRESH_SECRET)
+    const payload = jwt.verify(refreshToken, JWT_REFRESH_SECRET)
 
     const userId = payload?.sub
     const user = await UserModel.findById(userId)
