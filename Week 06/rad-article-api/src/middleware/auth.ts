@@ -34,4 +34,20 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
     }
 }
 
+export const optionalAuthenticate = async (req: AuthRequest, _res: Response, next: NextFunction) => {
+    const authHeader = req.headers.authorization
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+        const token = authHeader.split(" ")[1]
+        if (token) {
+            try {
+                const payload = jwt.verify(token, JWT_SECRET)
+                req.user = payload
+            } catch {
+                // Ignore token error and continue as guest
+            }
+        }
+    }
+    next()
+}
+
 export * from "./role"
