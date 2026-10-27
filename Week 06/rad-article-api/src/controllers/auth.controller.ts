@@ -1,14 +1,17 @@
 import { Request, Response } from "express"
 import { UserModel, UserRole } from "../models/user.model"
 import bcrypt from "bcryptjs"
-import { signAccessToken, signRefershToken } from "../util/jwt_token"
+import { signAccessToken, signRefreshToken } from "../util/jwt_token"
 import { AuthRequest } from "../middleware/auth"
-import "dotenv/config"
 import jwt from "jsonwebtoken"
+import dotenv from "dotenv"
+dotenv.config()
+
+const JWT_REFRESH_SECRET = process.env.JWT_SECRET as string
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { name, email, password, roles } = req.body
+    const { name, email, password } = req.body
     const extUser = await UserModel.findOne({ email })
     if (extUser) {
       return res.status(400).json({
@@ -22,7 +25,7 @@ export const register = async (req: Request, res: Response) => {
       name,
       email,
       password: hashedPassword,
-      roles: roles && Array.isArray(roles) && roles.length > 0 ? roles : [UserRole.USER],
+      roles: [UserRole.USER],
       approve: true
     })
     await newUser.save()
@@ -36,125 +39,88 @@ export const register = async (req: Request, res: Response) => {
   }
 }
 
-
 export const login = async (req: Request, res: Response) => {
+  const { email, password } = req.body
+
+  if (!email || !password) {
+    return res.status(400).json({
+      message: "missing data....!"
+    })
+  }
+
   try {
-    // Extract email and password
-    const { email, password } = req.body
-
-    // Validate payload
-    if (!email || !password) {
-      return res.status(400).json({
-        message: "Email and password are required..!"
-      })
-    }
-
-    // Find user in database
     const user = await UserModel.findOne({ email })
-
-    // Verify credentials
     if (!user) {
-      return res.status(401).json({
-        message: "Invalid email or password..!"
-      })
+      return res.status(401).json({ message: "Invalid credentials..!" })
     }
 
-    const isMatch = await bcrypt.compare(
-      password,
-      user.password
-    )
-
-    if (!isMatch) {
-      return res.status(401).json({
-        message: "Invalid email or password..!"
-      })
+    const isValid = await bcrypt.compare(password, user?.password)
+    if (!isValid) {
+      return res.status(401).json({ message: "Invalid credentials..!" })
     }
 
-    const accesToken = signAccessToken(user)
-    const refreshToken = signRefershToken(user)
+    const accessToken = signAccessToken(user)
+    const refreshToken = signRefreshToken(user)
 
-    // Successful authentication
-    return res.status(200).json({
-      message: "Login successful..!",
+    res.status(200).json({
+      message: "OK",
       data: {
         email: user.email,
         roles: user.roles,
-        access_token: accesToken,
+        access_token: accessToken,
         refresh_token: refreshToken
       }
     })
-
   } catch (err) {
     console.error(err)
-
-    return res.status(500).json({
-      message: "Login failed..!"
+    res.status(500).json({
+      message: "Internal server error while login..!"
     })
   }
 }
 
 export const getMyDetails = async (req: AuthRequest, res: Response) => {
-  // req.user.sub -> userID
-  // res.send("OK")
-  if(!req.user) {
-    return res.status(401).json({
-      message: "Unathorized"
-    })
+  // req.user
+  // req.user.sub -> userId
+  // req.user.roles -> user roles
+  if (!req.user) {
+    return res.status(401).json({ message: "Unauthorized" })
   }
-
   const user = await UserModel.findById(req.user.sub).select("-password")
 
-  if(!user) {
+  if (!user) {
     return res.status(404).json({
       message: "User not found"
     })
   }
 
-  const { email, roles, _id} = user
+  const { email, roles, _id } = user
 
-  return res.status(200).json({
-    message: "OK", data: {id: _id, email, roles}
-  })
+  res.status(200).json({ message: "ok", data: { id: _id, email, roles } })
 }
 
-export const adminAccess = async (req: AuthRequest, res: Response) => {
-  return res.status(200).json({
-    message: "Admin access granted..!",
-    data: {
-      user: req.user
-    }
-  })
-} 
-
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET as string
-
 export const getRefreshToken = async (req: Request, res: Response) => {
-  const {refreshToken} = req.body
+  const { refreshToken } = req.body
   try {
-    if(!refreshToken) {
+    if (!refreshToken) {
       return res.status(400).json({
-        message: "Token required...!"
+        message: "Token required..!"
       })
     }
     const payload = jwt.verify(refreshToken, JWT_REFRESH_SECRET)
-
     const userId = payload?.sub
     const user = await UserModel.findById(userId)
-
-    if(!user) {
+    if (!user) {
       return res.status(403).json({
-        message: "Invalid or expir token...!"
+        message: "Invalid or expire token..!"
       })
     }
-
     const newAccessToken = signAccessToken(user)
-
     res.status(200).json({
-      message: "",
-      data: { accessToken: newAccessToken}
+      data: { accessToken: newAccessToken }
     })
   } catch (err) {
+    res.status(403).json({ message: "Invalid or expire token" })
     console.error(err)
-    res.status(403).json({message: "Invalid or expir token...!"})
   }
 }
