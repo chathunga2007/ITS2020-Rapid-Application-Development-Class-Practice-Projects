@@ -1,28 +1,23 @@
-import { NextFunction, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import { AuthRequest } from "./auth"
 import { UserRole } from "../models/user.model"
 
-export const authorize = (role: UserRole) => {
-    return (req: AuthRequest, res: Response, next: NextFunction) => {
-        const user = req.user
-
-        // 1. Check user and roles exist
-        if (!user || !user.roles) {
-            return res.status(403).json({
-                message: "Access denied...!"
-            })
-        }
-
-        // 2. Check if user has the required role
-        if (user.roles.includes(role) || user.roles.includes(String(role))) {
-            return next()
-        }
-
-        // 3. If role doesn't match
-        return res.status(403).json({
-            message: "Access denied: Unauthorized role...!"
-        })
+// Middleware to restrict route access based on user roles.
+export const requireRole = (roles: UserRole[]) => {
+  return (req: AuthRequest, res: Response, next: NextFunction) => {
+    // Check user is authenticated and attached to the request object
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized" })
     }
+    // compare two array
+    // Check if user possesses at least one of the required roles
+    const hasRole = roles.some((role) => req.user.roles?.includes(role))
+    if (!hasRole) {
+      // 403 - Forbidden
+      return res.status(403).json({
+        message: `Require ${roles} role`
+      })
+    }
+    next()
+  }
 }
-
-export const isAdmin = authorize(UserRole.ADMIN)
