@@ -1,6 +1,7 @@
 import dotenv from "dotenv"
 dotenv.config()
-
+import dns from "node:dns"
+dns.setServers(["8.8.8.8"])
 import express, { type Request, type Response } from "express"
 import mongoose from "mongoose"
 import cors from "cors"
