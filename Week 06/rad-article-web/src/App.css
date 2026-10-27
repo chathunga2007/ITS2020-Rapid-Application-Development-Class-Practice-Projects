@@ -1,4 +1,4 @@
-css * {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -8,7 +8,8 @@ body {
     font-family: Arial, sans-serif;
 }
 
-.register-page {
+.register-page,
+.login-page {
     min-height: 100vh;
 
     display: flex;
@@ -22,7 +23,8 @@ body {
             #764ba2 100%);
 }
 
-.register-container {
+.register-container,
+.login-container {
     width: 100%;
     max-width: 430px;
 
@@ -38,7 +40,8 @@ body {
     backdrop-filter: blur(10px);
 }
 
-.register-container h1 {
+.register-container h1,
+.login-container h1 {
     text-align: center;
 
     margin-bottom: 32px;
@@ -49,14 +52,16 @@ body {
     color: #1f2937;
 }
 
-.register-container form {
+.register-container form,
+.login-container form {
     display: flex;
     flex-direction: column;
 
     gap: 22px;
 }
 
-.register-container input {
+.register-container input,
+.login-container input {
     width: 100%;
 
     padding: 16px 18px;
@@ -76,15 +81,18 @@ body {
     transition: all 0.3s ease;
 }
 
-.register-container input::placeholder {
+.register-container input::placeholder,
+.login-container input::placeholder {
     color: #9ca3af;
 }
 
-.register-container input:hover {
+.register-container input:hover,
+.login-container input:hover {
     border-color: #a5b4fc;
 }
 
-.register-container input:focus {
+.register-container input:focus,
+.login-container input:focus {
     border-color: #667eea;
 
     box-shadow:
@@ -126,7 +134,8 @@ body {
     transform: translateY(0);
 }
 
-.register-container p {
+.register-container p,
+.login-container p {
     text-align: center;
 
     margin-top: 28px;
@@ -163,27 +172,32 @@ body {
 }
 
 @media (max-width: 480px) {
-    .register-page {
+    .register-page,
+    .login-page {
         padding: 20px;
     }
 
-    .register-container {
+    .register-container,
+    .login-container {
         padding: 35px 25px;
 
         border-radius: 18px;
     }
 
-    .register-container h1 {
+    .register-container h1,
+    .login-container h1 {
         font-size: 28px;
 
         margin-bottom: 28px;
     }
 
-    .register-container form {
+    .register-container form,
+    .login-container form {
         gap: 18px;
     }
 
-    .register-container input {
+    .register-container input,
+    .login-container input {
         padding: 14px 16px;
     }
 
@@ -1202,6 +1216,8 @@ body {
   .nav-user-actions {
     width: 100%;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
   .hero-content h1 {
@@ -1221,4 +1237,113 @@ body {
     width: 100%;
     justify-content: center;
   }
+
+  .articles-grid {
+    grid-template-columns: 1fr;
+  }
 }
+
+/* Pagination container */
+.pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 48px;
+  padding: 16px 0;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.pagination-info {
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  background: #ffffff;
+  padding: 9px 18px;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+/* Quick Publish Section */
+.quick-publish-section {
+  max-width: 860px;
+  margin: 0 auto 40px auto;
+  animation: fadeIn 0.3s ease;
+}
+
+.quick-publish-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.btn-toggle-publish {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  background: #ede9fe;
+  color: #6d28d9;
+  border: 1px solid #ddd6fe;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-toggle-publish:hover {
+  background: #ddd6fe;
+  transform: translateY(-1px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
