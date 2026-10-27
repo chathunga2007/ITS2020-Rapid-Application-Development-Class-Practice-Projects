@@ -1,33 +1,46 @@
-// SOC
-
-import "dotenv/config"
 import { IUser } from "../models/user.model"
-import jwt from "jsonwebtoken"
+import jwt, { JwtPayload } from "jsonwebtoken"
+import dotenv from "dotenv"
+dotenv.config()
 
-const JWT_SECRET = process.env.JWT_SECRET as string
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET as string
+const getJwtSecret = (): string => {
+  return (
+    process.env.JWT_SECRET || ""
+  )
+}
 
-export const signAccessToken = (user: IUser) => {
+const getJwtRefreshSecret = (): string => {
+  return (
+    process.env.JWT_REFRESH_SECRET ||
+    process.env.JWT_SECRET || ""
+  )
+}
+
+export interface AuthPayload extends JwtPayload {
+  sub: string
+  roles?: string[]
+}
+
+export const signAccessToken = (user: IUser): string => {
   return jwt.sign(
-    {
-      sub: user._id.toString(),
-      roles: user.roles
-    },
-    JWT_SECRET,
+    { sub: user._id.toString(), roles: user.roles },
+    getJwtSecret(),
     {
       expiresIn: "30m"
     }
   )
 }
 
-export const signRefershToken = (user: IUser) => {
-  return jwt.sign(
-    {
-      sub: user._id.toString()
-    },
-    JWT_REFRESH_SECRET,
-    {
-      expiresIn: "7d"
-    }
-  )
+export const signRefreshToken = (user: IUser): string => {
+  return jwt.sign({ sub: user._id.toString() }, getJwtRefreshSecret(), {
+    expiresIn: "7d"
+  })
+}
+
+export const verifyAccessToken = (token: string): AuthPayload => {
+  return jwt.verify(token, getJwtSecret()) as AuthPayload
+}
+
+export const verifyRefreshToken = (token: string): AuthPayload => {
+  return jwt.verify(token, getJwtRefreshSecret()) as AuthPayload
 }
