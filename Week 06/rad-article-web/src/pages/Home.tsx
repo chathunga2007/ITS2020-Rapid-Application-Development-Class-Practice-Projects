@@ -80,6 +80,7 @@ export default function Home() {
 
   const submitForm = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (submitting) return
     if (!title.trim() || !content.trim()) {
       return alert("Title and Content are required!")
     }
