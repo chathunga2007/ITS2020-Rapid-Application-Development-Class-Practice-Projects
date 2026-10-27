@@ -41,6 +41,7 @@ export default function CreateArticle() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (loading) return
     setErrorMsg("")
     setSuccessMsg("")
 
