@@ -1,106 +1,87 @@
-import React, { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { getMyDetails, login } from "../service/auth"
+import type React from "react"
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import "../App.css"
+import { login } from "../service/auth"
 
 export default function Login() {
-    const navigate = useNavigate()
+  const navigate = useNavigate()
 
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
 
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault()
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
 
-        if (!email || !password) {
-            return alert("Please fill all fields!")
-        }
-
-        try {
-            const responData = await login(email, password)
-
-            console.log("Login response:", responData.data)
-
-            const resData = responData.data
-
-            const accessToken = resData.access_token
-            const refreshToken = resData.refresh_token
-
-            if (!accessToken || !refreshToken) {
-                return alert("Login failed...!")
-            }
-
-            localStorage.setItem("ACCESS_TOKEN", accessToken)
-            localStorage.setItem("REFRESH_TOKEN", refreshToken)
-
-            try {
-                await getMyDetails()
-            } catch (err) {
-                console.warn("Could not fetch user details:", err)
-            }
-
-            navigate("/")
-
-        } catch (error) {
-            console.error("Login error:", error)
-            alert("Login failed...!")
-        }
+    if (!email || !password) {
+      return alert("Please fill all fields...!")
     }
 
-    return (
-        <div className="auth-page">
-            <div className="auth-card">
+    try {
+      setLoading(true)
+      const res = await login(email, password)
+      const resData = res.data
 
-                <div className="brand">MyApp</div>
+      const accessToken = resData.access_token
+      const refreshToken = resData.refresh_token
 
-                <h1>Welcome Back</h1>
+      if (!accessToken || !refreshToken) {
+        return alert("Login fail..!")
+      }
 
-                <p className="subtitle">
-                    Login to your account
-                </p>
+      localStorage.setItem("ACCESS_TOKEN", accessToken)
+      localStorage.setItem("REFRESH_TOKEN", refreshToken)
 
-                <form onSubmit={handleLogin}>
+      window.location.href = "/"
+    } catch (err: any) {
+      console.error(err)
+      if (err.response) {
+        alert(err.response.data?.message || "Login fail..!")
+      } else {
+        alert("Server connection failed...!")
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
 
-                    <div className="form-group">
-                        <label>Email</label>
+  return (
+    <div className="login-page">
+      <div className="login-container">
+        <h1>Login</h1>
 
-                        <input
-                            type="email"
-                            placeholder="Enter your email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
-                    </div>
+        <form onSubmit={handleLogin}>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-                    <div className="form-group">
-                        <label>Password</label>
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-                        <input
-                            type="password"
-                            placeholder="Enter your password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </div>
+          <button type="submit" className="create-btn" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
 
-                    <button
-                        className="primary-btn"
-                        type="submit"
-                    >
-                        Login
-                    </button>
-
-                </form>
-
-                <p className="switch-text">
-                    Don't have an account?{" "}
-                    <Link to="/register">
-                        Create Account
-                    </Link>
-                </p>
-
-            </div>
-        </div>
-    )
-}
+        <p>
+          Don't have an account?
+          <button
+            type="button"
+            className="login-btn"
+            onClick={() => navigate("/register")}
+          >
+            Register
+          </button>
+        </p>
+      </div>
+    </div>
+  )
+}
